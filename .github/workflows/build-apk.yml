@@ -34,10 +34,8 @@ jobs:
           pip install buildozer==1.6.0 cython==0.29.36
 
       - name: Build APK
-        run: |
-          buildozer android debug
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: SignalX-Pro-APK
-          path: bin/*.apk
+  run: |
+    export HOME="$GITHUB_WORKSPACE"
+    export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
+    mkdir -p "$BUILDOZER_HOME"
+    buildozer android debug
