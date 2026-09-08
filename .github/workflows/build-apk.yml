@@ -16,7 +16,13 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v5
-        with:
+      - name: Install Android SDK components
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;35.0.0"        with:
           python-version: "3.11"
 
       - name: Install dependencies
