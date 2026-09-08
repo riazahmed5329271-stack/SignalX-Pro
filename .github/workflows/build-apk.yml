@@ -1,4 +1,4 @@
-name: Build Signal X Pro APK
+name: Signal X Pro APK
 
 on:
   workflow_dispatch:
@@ -28,6 +28,16 @@ jobs:
             zlib1g-dev libncurses5-dev libncursesw5-dev \
             cmake libffi-dev libssl-dev
 
+      - name: Setup Java 17
+        run: |
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> "$GITHUB_ENV"
+          echo "/usr/lib/jvm/java-17-openjdk-amd64/bin" >> "$GITHUB_PATH"
+
+      - name: Check Java
+        run: |
+          java -version
+          echo "JAVA_HOME=$JAVA_HOME"
+
       - name: Install Buildozer
         run: |
           python -m pip install --upgrade pip
@@ -35,7 +45,6 @@ jobs:
 
       - name: Setup Android SDK
         run: |
-          export HOME="$GITHUB_WORKSPACE"
           export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
           export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
@@ -52,33 +61,32 @@ jobs:
           mv cmdline-tools latest
 
           mkdir -p "$ANDROID_HOME/tools/bin"
-          ln -sf "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+
+          ln -sf \
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
             "$ANDROID_HOME/tools/bin/sdkmanager"
 
-          ln -sf "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" \
-            "$ANDROID_HOME/tools/bin/avdmanager"
+          echo "Checking sdkmanager..."
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
 
-          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$PATH"
-
-          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses || true
-
-          sdkmanager --sdk_root="$ANDROID_HOME" \
-            "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;35.0.0"
-
-      - name: Build APK
+      - name: Accept Android licenses
         run: |
-          export HOME="$GITHUB_WORKSPACE"
           export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
           export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
-          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$PATH"
+
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+
+      - name: Build APK
+        run: |
+          export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
+          export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
           buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SignalX-Pro-APK
+          name: Signal-X-Pro-APK
           path: bin/*.apk
