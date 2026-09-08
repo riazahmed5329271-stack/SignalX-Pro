@@ -122,8 +122,7 @@ fullscreen = 0
 # (bool) If True, then automatically accept SDK license
 # agreements. This is intended for automation only. If set to False,
 # the default, you will be shown the license when first running
-# buildozer.android.sdk_path = /root/.buildozer/android/platform/android-sdk
-android.ndk_path = /root/.buildozer/android/platform/android-ndk-r28c
+# buildozer.android.sdk_path = /root/.buildozer/android/platform/android
 # android.accept_sdk_license = False
 
 # (str) Android entry point, default is ok for Kivy-based app
