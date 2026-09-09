@@ -23,7 +23,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git zip unzip curl openjdk-17-jdk \
+            git zip unzip curl \
+            openjdk-17-jdk \
             autoconf automake libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
             cmake libffi-dev libssl-dev
@@ -50,6 +51,7 @@ jobs:
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
           mkdir -p "$ANDROID_HOME/cmdline-tools"
+
           cd "$ANDROID_HOME/cmdline-tools"
 
           curl -L -o tools.zip \
@@ -60,14 +62,8 @@ jobs:
 
           mv cmdline-tools latest
 
-          mkdir -p "$ANDROID_HOME/tools/bin"
-
-          ln -sf \
-            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
-            "$ANDROID_HOME/tools/bin/sdkmanager"
-
-          echo "Checking sdkmanager..."
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
+          echo "Android SDK location:"
+          echo "$ANDROID_HOME"
 
       - name: Install Android SDK packages
         run: |
@@ -80,20 +76,27 @@ jobs:
           yes | "$SDKMANAGER" --licenses || true
 
           "$SDKMANAGER" \
+            --sdk_root="$ANDROID_HOME" \
             "platform-tools" \
             "platforms;android-35" \
             "build-tools;37.0.0"
 
-          yes | "$SDKMANAGER" --licenses || true
+          echo "Installed Build Tools:"
+          ls -la "$ANDROID_HOME/build-tools/"
 
-      - name: Check Android Build Tools
+      - name: Verify AIDL
         run: |
           export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
           export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
-          test -f "$ANDROID_HOME/build-tools/37.0.0/aidl"
-          echo "Android Build Tools installed successfully."
+          if [ ! -f "$ANDROID_HOME/build-tools/37.0.0/aidl" ]; then
+            echo "ERROR: AIDL was not installed."
+            exit 1
+          fi
+
+          echo "AIDL found successfully:"
+          ls -lh "$ANDROID_HOME/build-tools/37.0.0/aidl"
 
       - name: Build APK
         run: |
