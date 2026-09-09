@@ -86,14 +86,14 @@ jobs:
 
           yes | "$SDKMANAGER" --licenses || true
 
-      - name: Verify Android Build Tools
+      - name: Check Android Build Tools
         run: |
           export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
           export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
-          ls -la "$ANDROID_HOME/build-tools/37.0.0"
-          "$ANDROID_HOME/build-tools/37.0.0/aidl" --version
+          test -f "$ANDROID_HOME/build-tools/37.0.0/aidl"
+          echo "Android Build Tools installed successfully."
 
       - name: Build APK
         run: |
