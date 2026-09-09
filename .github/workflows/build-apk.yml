@@ -69,13 +69,31 @@ jobs:
           echo "Checking sdkmanager..."
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
 
-      - name: Accept Android licenses
+      - name: Install Android SDK packages
         run: |
           export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
           export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+
+          yes | "$SDKMANAGER" --licenses || true
+
+          "$SDKMANAGER" \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;37.0.0"
+
+          yes | "$SDKMANAGER" --licenses || true
+
+      - name: Verify Android Build Tools
+        run: |
+          export BUILDOZER_HOME="$GITHUB_WORKSPACE/.buildozer"
+          export ANDROID_HOME="$BUILDOZER_HOME/android/platform/android-sdk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+
+          ls -la "$ANDROID_HOME/build-tools/37.0.0"
+          "$ANDROID_HOME/build-tools/37.0.0/aidl" --version
 
       - name: Build APK
         run: |
