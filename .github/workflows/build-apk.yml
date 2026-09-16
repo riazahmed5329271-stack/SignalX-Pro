@@ -24,34 +24,27 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git \
-            zip \
-            unzip \
-            autoconf \
-            automake \
-            libtool \
-            pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
-            cmake \
-            libffi-dev \
-            libssl-dev
+            git zip unzip autoconf automake libtool pkg-config \
+            zlib1g-dev libncurses5-dev libncursesw5-dev \
+            cmake libffi-dev libssl-dev
 
       - name: Install Buildozer
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install buildozer==1.6.0 cython==0.29.36
 
-      - name: Set Buildozer home
+      - name: Set Buildozer Home
         run: |
           echo "BUILDOZER_HOME=$GITHUB_WORKSPACE/.buildozer" >> "$GITHUB_ENV"
 
-      - name: Build APK
+      - name: Buildozer Android Build
+        env:
+          P4A_RELEASE_KEYSTORE: ""
         run: |
           buildozer -v android debug
 
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: SignalXPro-APK
