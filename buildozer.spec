@@ -1,5 +1,6 @@
 [app]
 title = SignalXPro
+android.accept_sdk_license = True
 
 # (str) Package name
 package.name = signalxpro
