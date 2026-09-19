@@ -23,11 +23,16 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
 
-      - name: Install Android SDK packages
+      - name: Accept Android licenses
         run: |
           yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;35.0.0" "ndk;27.3.13750724"
-          yes | sdkmanager --licenses || true
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager "platform-tools"
+          sdkmanager "platforms;android-33"
+          sdkmanager "build-tools;35.0.0"
+          sdkmanager "ndk;27.3.13750724"
 
       - name: Install system packages
         run: |
@@ -47,7 +52,7 @@ jobs:
             libffi-dev \
             libssl-dev
 
-      - name: Install Python tools
+      - name: Install Buildozer
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install buildozer==1.6.0 cython==0.29.36
@@ -59,10 +64,8 @@ jobs:
           echo "ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/27.3.13750724" >> "$GITHUB_ENV"
           echo "ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk/27.3.13750724" >> "$GITHUB_ENV"
 
-      - name: Show Android configuration
+      - name: Check Android setup
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
           java -version
           python3 --version
           buildozer --version
