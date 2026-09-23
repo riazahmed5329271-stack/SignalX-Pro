@@ -71,11 +71,6 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install "cython<3.0,>=0.29.33"
-          python3 -m pip install buildozer==1.6.0
-          - name: Install Buildozer and Cython
-        run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install "cython<3.0,>=0.29.33"
           python3 -m pip install buildozer==1.6.0 python-for-android==2024.1.21
 
       - name: Configure Android environment
