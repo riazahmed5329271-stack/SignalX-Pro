@@ -33,7 +33,7 @@ version = 0.1
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main# (list) Application requirements = python3,kivy,requests,pyjnius
-requirements = python3,kivy
+,charset-normalizer==3.3.2,urllib3==1.26.18
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
