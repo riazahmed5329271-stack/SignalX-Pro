@@ -49,6 +49,7 @@ jobs:
             zip \
             unzip \
             openjdk-17-jdk \
+            ant \
             autoconf \
             automake \
             libtool \
