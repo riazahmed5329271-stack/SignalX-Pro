@@ -34,8 +34,9 @@ version = 0.1
 # version.filename = %(source.dir)s/main
 
 # (list) Application requirements
-requirements = python3,kivy,requests,pyjnius,charset-normalizer==3.3.2,urllib3==1.26.18
+requirements = python3,kivy==2.3.1
 
+p4a.branch = master
 # (str) Custom source folders for requirements
 # requirements.source.kivy = ../../kivy
 
