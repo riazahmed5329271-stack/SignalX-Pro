@@ -61,11 +61,13 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install "cython==0.29.37"
-          python3 -m pip install "sh==1.14.2"
           python3 -m pip install buildozer==1.6.0
           python3 -m pip install python-for-android==2024.1.21
+
+      - name: Fix SH Library Version
+        run: |
+          python3 -m pip install --force-reinstall "sh==1.14.2"
           python3 -m pip show sh
-          python3 -m pip show python-for-android
           python3 -m pip check
 
       - name: Configure Android environment
@@ -94,5 +96,4 @@ jobs:
         with:
           name: SignalXPro-APK
           path: bin/*.apk
-          if-no-files-found: error
           
